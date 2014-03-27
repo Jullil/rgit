@@ -1,0 +1,47 @@
+#!/bin/bash
+
+finish_task() {
+	_module_name=$1
+	_module_path=$2
+	_module_url=$3
+	shift 3
+	_args=$@
+	_branch=${_args[0]}
+
+	cd $_module_path
+
+	_is_exist=`git branch | grep $_branch | sed 's/[\.* ]//g'`
+	if [ -z $_is_exist ]
+	then
+		echo ""
+		$SETCOLOR_FAILURE
+		echo "Something wrong! Branch $_branch doesn\'t exist"
+		echo "${SRED}${STOEND}[fail]"
+	else
+		git checkout $_branch
+		_uncommited_changes=`git diff $_branch`
+		echo $_uncommited_changes
+		if [ -n $_uncommited_changes ]
+		then
+			echo -n "You have uncommitted changes:"
+			echo -n $_uncommited_changes
+			echo -n "Commit them? (y/n)"
+
+			read item
+			case "$item" in
+				y|Y)
+					echo "Commit"
+					;;
+				n|N) 
+					echo "Don\'t commit!"
+					;;
+				*)
+					echo "Don\'t commit!"
+					;;
+			esac
+		fi
+		
+		echo "${SGREEN}${STOEND}[OK]"
+	fi
+	echo -n "${SRESET}"
+}

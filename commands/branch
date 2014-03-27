@@ -1,0 +1,12 @@
+#!/bin/bash
+
+branch() {
+	_module_name=$1
+	_module_path=$2
+	_module_url=$3
+	shift 3
+	_args=$@
+
+	cd $_module_path
+	git branch ${_args[*]}
+}

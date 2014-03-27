@@ -1,0 +1,42 @@
+#!/bin/bash
+
+start_task() {
+	_module_name=$1
+	_module_path=$2
+	_module_url=$3
+	shift 3
+	_args=$@
+	_new_branch=${_args[0]}
+
+	if [ -z $_new_branch ]
+	then
+		echo ""
+		$SETCOLOR_FAILURE
+		echo -n "Branch name not found"
+		echo "${SRED}${STOEND}[fail]"
+		echo -n "${SRESET}"
+		print_help 'start-task'
+	else
+		cd $_module_path
+
+		_main_branch=`git branch | grep develop | sed 's/[\.* ]//g'`
+		if [ -z $_main_branch ]
+		then
+			_main_branch=`git branch | grep master | sed 's/[\.* ]//g'`
+		fi
+		if [ -z $_main_branch ]
+		then
+			echo ""
+			$SETCOLOR_FAILURE
+			echo -n "Something wrong! Branch develop or master doesn\'t exist"
+			echo "${SRED}${STOEND}[fail]"
+		else
+			git checkout $_main_branch
+			git pull origin $_main_branch
+			git checkout -b $_new_branch
+			
+			echo "${SGREEN}${STOEND}[OK]"
+		fi
+	fi
+	echo -n "${SRESET}"
+}
