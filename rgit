@@ -40,7 +40,7 @@ function print_help() {
 	esac
 }
 
-fetch_modules() {
+function fetch_modules() {
     echo "Get all modules"
     _file="${CUR_PATH}/repository_list"
 
@@ -73,7 +73,7 @@ source $SCRIPT_PATH/commands/push
 source $SCRIPT_PATH/commands/start_task
 source $SCRIPT_PATH/commands/finish_task
 
-exec_command() {
+function exec_command() {
 	_command_name=$1
 	shift
 	_command_args=($*)
