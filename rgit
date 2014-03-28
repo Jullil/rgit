@@ -1,11 +1,14 @@
 #!/bin/bash
 
-SETCOLOR_SUCCESS="echo -en \\033[1;32m"
-SETCOLOR_FAILURE="echo -en \\033[1;31m"
-SETCOLOR_NORMAL="echo -en \\033[0;39m"
-
-SRED=$(tput setf 4)
+SBLUE=$(tput setf 1)
 SGREEN=$(tput setf 2)
+SCYAN=$(tput setf 3)
+SRED=$(tput setf 4)
+SMAGENTA=$(tput setf 5)
+SYELLOW=$(tput setf 6)
+SWHITE=$(tput setf 7)
+SBOLD=$(tput bold)
+SUNDERLINE=$(tput smul)
 SRESET=$(tput sgr0)
 STOEND=$(tput hpa $(tput cols))$(tput cub 6)
 
@@ -18,7 +21,7 @@ function print_help() {
 		"start-task" | "pull")
 			echo "Usage: grit start-task|st <branch_name> [-d <repository_name>]"
 			echo "Params:"
-			echo "  -d             	   Call the command for certain repositories"
+			echo "  -d    Call the command for certain repositories"
 		;;
 		*)
 			echo "Usage: grit <command> [<args>] [-d <repository_name>]"
@@ -32,7 +35,7 @@ function print_help() {
 			echo "  start-task|st      Switch to master or develop branch. Fetch changes. Create and checkout to new branch."
 			echo "  finish-task|ft     Switch to branch. Commit and push changes to remote branch. Switch to master or develop branch."
 			echo "Params:"
-			echo "  -d             	   Call the command for certain repositories"
+			echo "  -d                 Call the command for certain repositories"
 		;;
 	esac
 }
@@ -86,55 +89,53 @@ exec_command() {
 	then
 		case $_command_name in
 			"p" | "pull")
-				echo "Pull changes of module ${_module_name}"
+				echo "${SYELLOW}Pull changes of module \"${_module_name}\"${SRESET}"
 				pull ${_command_args[*]}
 			;;
 			"ps" | "push")
-				echo "Push changes for module \"${_module_name}\""
+				echo "${SYELLOW}Push changes for module \"${_module_name}\"${SRESET}"
 				push ${_command_args[*]}
 			;;
 			"f" | "fetch")
-				echo "Fetch branches for module \"${_module_name}\""
+				echo "${SYELLOW}Fetch branches for module \"${_module_name}\"${SRESET}"
 				fetch ${_command_args[*]}
 			;;
 			"c" | "commit")
-				echo "Commit changes for module \"${_module_name}\""
+				echo "${SYELLOW}Commit changes for module \"${_module_name}\"${SRESET}"
 				commit ${_command_args[*]}
 			;;
 			"b" | "branch")
-				echo "Create new branch for module \"${_module_name}\""
+				echo "${SYELLOW}Create new branch for module \"${_module_name}\"${SRESET}"
 				branch ${_command_args[*]}
 			;;
 			"ch" | "checkout")
-				echo "Checkout to branch for module \"${_module_name}\""
+				echo "${SYELLOW}Checkout to branch for module \"${_module_name}\"${SRESET}"
 				checkout ${_command_args[*]}
 			;;
 			"st" | "start-task")
-				echo "Start new task for module \"${_module_name}\""
+				echo "${SYELLOW}Start new task for module \"${_module_name}\"${SRESET}"
 				start_task ${_command_args[*]}
 			;;
 			"ft" | "finish-task")
-				echo "Finish task for module \"${_module_name}\""
+				echo "${SYELLOW}Finish task for module \"${_module_name}\"${SRESET}"
 				finish_task ${_command_args[*]}
 			;;
 			*)
-				echo "Unknown operation \"$_command_name\""
+				echo -n "${SRED}Unknown operation \"$_command_name\"${SRESET}"
+				echo "${SRED}${STOEND}[fail]${SRESET}"
 			;;
 		esac
 	else
-		$SETCOLOR_FAILURE
-		echo "Module \"$_module_name\" not found ($_dir)"
-		echo "Use \"rgit pull -d $_module_name\""
-		echo "${SRED}${STOEND}[fail]"
-		echo -n "${SRESET}"
+		echo "${SRED}Module \"$_module_name\" not found ($_dir)"
+		echo -n "Use \"rgit pull -d $_module_name\"${SRESET}"
+		echo "${SRED}${STOEND}[fail]${SRESET}"
 	fi
 }
 
 if [ -z $1 ]
 then
-	$SETCOLOR_FAILURE
-	echo "Command not found"
-	echo -n "${SRESET}"
+	echo -n "${SRED}Command not found${SRESET}"
+	echo "${SRED}${STOEND}[fail]${SRESET}"
 	print_help
 else
 	_operation=$1
@@ -145,7 +146,6 @@ else
 	do 
 		case $1 in
 			"-d")
-				echo "Module name $2"
 				selected_module_name=$2
 				shift
 			;;

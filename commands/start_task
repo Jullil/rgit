@@ -10,11 +10,8 @@ start_task() {
 
 	if [ -z $_new_branch ]
 	then
-		echo ""
-		$SETCOLOR_FAILURE
-		echo -n "Branch name not found"
-		echo "${SRED}${STOEND}[fail]"
-		echo -n "${SRESET}"
+		echo -n "${SRED}Branch name not found${SRESET}"
+		echo "${SRED}${STOEND}[fail]${SRESET}"
 		print_help 'start-task'
 	else
 		cd $_module_path
@@ -26,17 +23,20 @@ start_task() {
 		fi
 		if [ -z $_main_branch ]
 		then
-			echo ""
-			$SETCOLOR_FAILURE
-			echo -n "Something wrong! Branch develop or master doesn\'t exist"
-			echo "${SRED}${STOEND}[fail]"
+			echo -n "${SRED}Something wrong! Branch develop or master doesn\'t exist${SRESET}"
+			echo "${SRED}${STOEND}[fail]${SRESET}"
 		else
+			echo "${SGREEN}Checkout on $_main_branch${SRESET}"
 			git checkout $_main_branch
+			
+			echo "${SGREEN}Pull changes from $_main_branch${SRESET}"
 			git pull origin $_main_branch
+			
+			echo "${SGREEN}Checkout on $_new_branch${SRESET}"
 			git checkout -b $_new_branch
 			
-			echo "${SGREEN}${STOEND}[OK]"
+			echo "${SGREEN}${STOEND}[OK]${SRESET}"
 		fi
 	fi
-	echo -n "${SRESET}"
+
 }
