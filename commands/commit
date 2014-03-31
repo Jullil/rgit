@@ -7,6 +7,13 @@ commit() {
 	shift 3
 	_args=$@
 
-	cd $_module_path
-	git commit ${_args[*]}
+    if [ -d $_module_path ]
+	then
+        cd $_module_path
+        git commit ${_args[*]}
+    else
+        echo "${SRED}Module \"$_module_name\" not found ($_dir)"
+        echo -n "Use \"rgit prepare -d $_module_name\"${SRESET}"
+        echo "${SRED}${STOEND}[fail]${SRESET}"
+    fi
 }

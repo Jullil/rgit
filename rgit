@@ -32,6 +32,7 @@ function print_help() {
 			echo "  fetch|f            Download objects and refs from another repository (see git command)"
 			echo "  commit|c           Record changes to the repository (see git command)"
 			echo "  push|ps            Update remote refs along with associated objects (see git command)"
+			echo "  prepare|pr         Clone repository and fetch branches if it doesn\'t exist"
 			echo "  start-task|st      Switch to master or develop branch. Fetch changes. Create and checkout to new branch."
 			echo "  finish-task|ft     Switch to branch. Commit and push changes to remote branch. Switch to master or develop branch."
 			echo "Params:"
@@ -70,6 +71,7 @@ source $SCRIPT_PATH/commands/fetch
 source $SCRIPT_PATH/commands/commit
 source $SCRIPT_PATH/commands/push
 
+source $SCRIPT_PATH/commands/prepare
 source $SCRIPT_PATH/commands/start_task
 source $SCRIPT_PATH/commands/finish_task
 
@@ -85,51 +87,48 @@ function exec_command() {
 
 	_command_args[1]=$_dir
 	
-	if [ -d $_dir ] 
-	then
-		case $_command_name in
-			"p" | "pull")
-				echo "${SYELLOW}Pull changes of module \"${_module_name}\"${SRESET}"
-				pull ${_command_args[*]}
-			;;
-			"ps" | "push")
-				echo "${SYELLOW}Push changes for module \"${_module_name}\"${SRESET}"
-				push ${_command_args[*]}
-			;;
-			"f" | "fetch")
-				echo "${SYELLOW}Fetch branches for module \"${_module_name}\"${SRESET}"
-				fetch ${_command_args[*]}
-			;;
-			"c" | "commit")
-				echo "${SYELLOW}Commit changes for module \"${_module_name}\"${SRESET}"
-				commit ${_command_args[*]}
-			;;
-			"b" | "branch")
-				echo "${SYELLOW}Create new branch for module \"${_module_name}\"${SRESET}"
-				branch ${_command_args[*]}
-			;;
-			"ch" | "checkout")
-				echo "${SYELLOW}Checkout to branch for module \"${_module_name}\"${SRESET}"
-				checkout ${_command_args[*]}
-			;;
-			"st" | "start-task")
-				echo "${SYELLOW}Start new task for module \"${_module_name}\"${SRESET}"
-				start_task ${_command_args[*]}
-			;;
-			"ft" | "finish-task")
-				echo "${SYELLOW}Finish task for module \"${_module_name}\"${SRESET}"
-				finish_task ${_command_args[*]}
-			;;
-			*)
-				echo -n "${SRED}Unknown operation \"$_command_name\"${SRESET}"
-				echo "${SRED}${STOEND}[fail]${SRESET}"
-			;;
-		esac
-	else
-		echo "${SRED}Module \"$_module_name\" not found ($_dir)"
-		echo -n "Use \"rgit pull -d $_module_name\"${SRESET}"
-		echo "${SRED}${STOEND}[fail]${SRESET}"
-	fi
+    case $_command_name in
+        "p" | "pull")
+            echo "${SYELLOW}Pull changes of module \"${_module_name}\"${SRESET}"
+            pull ${_command_args[*]}
+        ;;
+        "ps" | "push")
+            echo "${SYELLOW}Push changes for module \"${_module_name}\"${SRESET}"
+            push ${_command_args[*]}
+        ;;
+        "f" | "fetch")
+            echo "${SYELLOW}Fetch branches for module \"${_module_name}\"${SRESET}"
+            fetch ${_command_args[*]}
+        ;;
+        "c" | "commit")
+            echo "${SYELLOW}Commit changes for module \"${_module_name}\"${SRESET}"
+            commit ${_command_args[*]}
+        ;;
+        "b" | "branch")
+            echo "${SYELLOW}Create new branch for module \"${_module_name}\"${SRESET}"
+            branch ${_command_args[*]}
+        ;;
+        "ch" | "checkout")
+            echo "${SYELLOW}Checkout to branch for module \"${_module_name}\"${SRESET}"
+            checkout ${_command_args[*]}
+        ;;
+        "pr" | "prepare")
+            echo "${SYELLOW}Prepare module \"${_module_name}\"${SRESET}"
+            prepare ${_command_args[*]}
+        ;;
+        "st" | "start-task")
+            echo "${SYELLOW}Start new task for module \"${_module_name}\"${SRESET}"
+            start_task ${_command_args[*]}
+        ;;
+        "ft" | "finish-task")
+            echo "${SYELLOW}Finish task for module \"${_module_name}\"${SRESET}"
+            finish_task ${_command_args[*]}
+        ;;
+        *)
+            echo -n "${SRED}Unknown operation \"$_command_name\"${SRESET}"
+            echo "${SRED}${STOEND}[fail]${SRESET}"
+        ;;
+    esac
 }
 
 if [ -z $1 ]

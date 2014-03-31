@@ -1,0 +1,23 @@
+#!/bin/bash
+
+prepare() {
+	_module_name=$1
+	_module_path=$2
+	_module_url=$3
+	shift 3
+	_args=$@
+
+	if [ -d $_module_path ]
+	then
+        echo -n "${SGREEN}Module \"$_module_name\" is already prepared"
+	else
+	    echo "${SGREEN}Clone repository to $_module_path${SRESET}"
+        git clone $_module_url $_module_path
+
+        cd $_module_path
+
+	    echo -n "${SGREEN}Fetch info about branches${SRESET}"
+        git fetch
+    fi
+    echo "${SGREEN}${STOEND}[OK]${SRESET}"
+}

@@ -37,7 +37,7 @@ start_task() {
 
             #_is=`echo $_output | grep fatal | sed 's/[\.* ]//g'`
             #echo $_is
-			echo "111111111${SMAGENTA}${_output}${SRESET}"
+			echo "${SMAGENTA}${_output}${SRESET}"
 
 			echo "${SGREEN}${STOEND}[OK]${SRESET}"
 		fi

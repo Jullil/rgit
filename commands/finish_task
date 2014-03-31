@@ -9,39 +9,45 @@ finish_task() {
 	_branch=${_args[0]}
 
 	cd $_module_path
-
-	_is_exist=`git branch | grep $_branch | sed 's/[\.* ]//g'`
-	if [ -z $_is_exist ]
+    if [ -d $_module_path ]
 	then
-		echo ""
-		$SETCOLOR_FAILURE
-		echo "Something wrong! Branch $_branch doesn\'t exist"
-		echo "${SRED}${STOEND}[fail]"
-	else
-		git checkout $_branch
-		_uncommited_changes=`git diff $_branch`
-		echo $_uncommited_changes
-		if [ -n $_uncommited_changes ]
-		then
-			echo -n "You have uncommitted changes:"
-			echo -n $_uncommited_changes
-			echo -n "Commit them? (y/n)"
+        _is_exist=`git branch | grep $_branch | sed 's/[\.* ]//g'`
+        if [ -z $_is_exist ]
+        then
+            echo ""
+            $SETCOLOR_FAILURE
+            echo "Something wrong! Branch $_branch doesn\'t exist"
+            echo "${SRED}${STOEND}[fail]"
+        else
+            git checkout $_branch
+            _uncommited_changes=`git diff $_branch`
+            echo $_uncommited_changes
+            if [ -n $_uncommited_changes ]
+            then
+                echo -n "You have uncommitted changes:"
+                echo -n $_uncommited_changes
+                echo -n "Commit them? (y/n)"
 
-			read item
-			case "$item" in
-				y|Y)
-					echo "Commit"
-					;;
-				n|N) 
-					echo "Don\'t commit!"
-					;;
-				*)
-					echo "Don\'t commit!"
-					;;
-			esac
-		fi
-		
-		echo "${SGREEN}${STOEND}[OK]"
-	fi
-	echo -n "${SRESET}"
+                read item
+                case "$item" in
+                    y|Y)
+                        echo "Commit"
+                        ;;
+                    n|N)
+                        echo "Don\'t commit!"
+                        ;;
+                    *)
+                        echo "Don\'t commit!"
+                        ;;
+                esac
+            fi
+
+            echo "${SGREEN}${STOEND}[OK]"
+        fi
+        echo -n "${SRESET}"
+    else
+        echo "${SRED}Module \"$_module_name\" not found ($_dir)"
+        echo -n "Use \"rgit prepare -d $_module_name\"${SRESET}"
+        echo "${SRED}${STOEND}[fail]${SRESET}"
+    fi
 }
