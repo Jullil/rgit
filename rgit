@@ -44,7 +44,6 @@ function fetch_modules() {
     while read _line
     do
 		_module_name=`echo $_line | head -n1 | awk '{print $1;}'`
-		#echo $_module_name
 		if [ -z $selected_module_name ]
 		then
 			module_list[$_num]="${_line[@]}"
