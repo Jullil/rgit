@@ -26,17 +26,12 @@ function print_help() {
 		*)
 			echo "Usage: grit <command> [<args>] [-d <repository_name>]"
 			echo "Commands:"
-			echo "  pull|p             Fetch from and merge with another repository or a local branch (see git command)"
-			echo "  branch|b           List, create, or delete branches (see git command)"
-			echo "  checkout|ch        Checkout a branch or paths to the working tree (see git command)"
-			echo "  fetch|f            Download objects and refs from another repository (see git command)"
-			echo "  commit|c           Record changes to the repository (see git command)"
-			echo "  push|ps            Update remote refs along with associated objects (see git command)"
-			echo "  prepare|pr         Clone repository and fetch branches if it doesn\'t exist"
-			echo "  start-task|st      Switch to master or develop branch. Fetch changes. Create and checkout to new branch."
-			echo "  finish-task|ft     Switch to branch. Commit and push changes to remote branch. Switch to master or develop branch."
+			echo "  pull|push|clone|...  Any git command"
+			echo "  prepare|pr           Clone repository and fetch branches if it doesn\'t exist"
+			echo "  start-task|st        Switch to master or develop branch. Fetch changes. Create and checkout to new branch."
+			echo "  finish-task|ft       Switch to branch. Commit and push changes to remote branch. Switch to master or develop branch."
 			echo "Params:"
-			echo "  -d                 Call the command for certain repositories"
+			echo "  -d                   Call the command for certain repositories"
 		;;
 	esac
 }
@@ -64,13 +59,7 @@ function fetch_modules() {
     done < $_file
 }
 
-source $SCRIPT_PATH/commands/pull
-source $SCRIPT_PATH/commands/branch
-source $SCRIPT_PATH/commands/checkout
-source $SCRIPT_PATH/commands/fetch
-source $SCRIPT_PATH/commands/commit
-source $SCRIPT_PATH/commands/push
-
+source $SCRIPT_PATH/commands/git_command
 source $SCRIPT_PATH/commands/prepare
 source $SCRIPT_PATH/commands/start_task
 source $SCRIPT_PATH/commands/finish_task
@@ -88,30 +77,6 @@ function exec_command() {
 	_command_args[1]=$_dir
 	
     case $_command_name in
-        "p" | "pull")
-            echo "${SYELLOW}Pull changes of module \"${_module_name}\"${SRESET}"
-            pull ${_command_args[*]}
-        ;;
-        "ps" | "push")
-            echo "${SYELLOW}Push changes for module \"${_module_name}\"${SRESET}"
-            push ${_command_args[*]}
-        ;;
-        "f" | "fetch")
-            echo "${SYELLOW}Fetch branches for module \"${_module_name}\"${SRESET}"
-            fetch ${_command_args[*]}
-        ;;
-        "c" | "commit")
-            echo "${SYELLOW}Commit changes for module \"${_module_name}\"${SRESET}"
-            commit ${_command_args[*]}
-        ;;
-        "b" | "branch")
-            echo "${SYELLOW}Create new branch for module \"${_module_name}\"${SRESET}"
-            branch ${_command_args[*]}
-        ;;
-        "ch" | "checkout")
-            echo "${SYELLOW}Checkout to branch for module \"${_module_name}\"${SRESET}"
-            checkout ${_command_args[*]}
-        ;;
         "pr" | "prepare")
             echo "${SYELLOW}Prepare module \"${_module_name}\"${SRESET}"
             prepare ${_command_args[*]}
@@ -125,8 +90,8 @@ function exec_command() {
             finish_task ${_command_args[*]}
         ;;
         *)
-            echo -n "${SRED}Unknown operation \"$_command_name\"${SRESET}"
-            echo "${SRED}${STOEND}[fail]${SRESET}"
+            echo "${SYELLOW}Git command \"${_command_name}\" for module \"${_module_name}\"${SRESET}"
+            git_command ${_command_name} ${_command_args[*]}
         ;;
     esac
 }

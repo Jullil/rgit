@@ -1,0 +1,30 @@
+#!/bin/bash
+
+git_command() {
+	_command_name=$1
+	shift
+	_module_name=$1
+	_module_path=$2
+	_module_url=$3
+	shift 3
+	_args=$@
+
+    if [ $_command_name == "clone" ]
+    then
+        git clone $_module_url $_module_path
+
+        echo "${SGREEN}${STOEND}[OK]${SRESET}"
+    else
+        if [ -d $_module_path ]
+        then
+            cd $_module_path
+            git ${_command_name} ${_args[*]}
+
+            echo "${SGREEN}${STOEND}[OK]${SRESET}"
+        else
+            echo "${SRED}Module \"$_module_name\" not found ($_dir)"
+            echo -n "Use \"rgit prepare -d $_module_name\"${SRESET}"
+            echo "${SRED}${STOEND}[fail]${SRESET}"
+        fi
+    fi
+}
