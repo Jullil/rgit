@@ -29,15 +29,11 @@ start_task() {
 			echo "${SGREEN}Checkout on $_main_branch${SRESET}"
 			git checkout $_main_branch
 
-			#echo "${SGREEN}Pull changes from $_main_branch${SRESET}"
-			#`git pull origin $_main_branch` > _otput
+			echo "${SGREEN}Pull changes from $_main_branch${SRESET}"
+			`git pull origin $_main_branch` > _otput
 
 			echo "${SGREEN}Checkout on $_new_branch${SRESET}"
 			git checkout -b $_new_branch
-
-            #_is=`echo $_output | grep fatal | sed 's/[\.* ]//g'`
-            #echo $_is
-			#echo "${SMAGENTA}${_output}${SRESET}"
 
 			echo "${SGREEN}${STOEND}[OK]${SRESET}"
 		fi
