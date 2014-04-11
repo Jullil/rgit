@@ -30,7 +30,7 @@ start_task() {
 			git checkout $_main_branch
 
 			echo "${SGREEN}Pull changes from $_main_branch${SRESET}"
-			`git pull origin $_main_branch` > _otput
+			git pull origin $_main_branch
 
 			echo "${SGREEN}Checkout on $_new_branch${SRESET}"
 			git checkout -b $_new_branch
